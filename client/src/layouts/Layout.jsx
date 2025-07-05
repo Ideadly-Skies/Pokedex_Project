@@ -5,15 +5,13 @@ import CustomStyles from './CustomStyles';
 
 export default function Layout({ children }) {
   return (
-    <>
+    <div id="__next">
       <CustomStyles />
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 px-3.5 pt-8 pb-20 lg:px-6 lg:py-10 overflow-y-auto">
-          {children}
-        </main>
-      </div>
-    </>
+      <Sidebar />
+      <main className="min-h-screen px-3.5 pt-8 pb-20 lg:px-6 lg:py-10">
+        {children}
+      </main>
+    </div>
   );
 }
