@@ -9,7 +9,7 @@ export default function Layout({ children }) {
       <CustomStyles />
       <Header />
       <Sidebar />
-      <main className="min-h-screen px-3.5 pt-8 pb-20 lg:px-6 lg:py-10">
+      <main className="min-h-screen px-3.5 pt-8 pb-20  lg:py-10">
         {children}
       </main>
     </div>
