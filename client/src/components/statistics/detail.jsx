@@ -1,47 +1,62 @@
 import { useQuery } from '@tanstack/react-query';
 import { snakeCaseToTitleCase } from '../../utils/string';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../hooks/useTheme';
 
-// Define the hook inside this file
 const fetchStatistics = async () => {
   const res = await fetch('/generated/statistics/types.json');
   return res.json();
 };
 
 const usePokemonStatistics = () =>
-    useQuery({
-        queryKey: ['pokemon-statistics'],
-        queryFn: fetchStatistics
-    });
+  useQuery({
+    queryKey: ['pokemon-statistics'],
+    queryFn: fetchStatistics,
+  });
 
 export default function Detail({ activeRibbon }) {
   const { data: statistics } = usePokemonStatistics();
   const { pokemons } = statistics || {};
+  const { isDarkMode } = useTheme();
 
-  if (!activeRibbon) {
-    return <div className="2xl:w-56" />;
-  }
+  if (!activeRibbon) return <div className="2xl:w-56" />;
 
   const { id, source, target } = activeRibbon;
 
   return (
-    <div className="mx-3.5 mt-4 rounded-md border bg-white pb-2 text-sm dark:bg-dark-card lg:mx-0 lg:mt-0 2xl:w-56">
-      {source.id === target.id ? (
-        <div className="mb-1 flex items-center gap-2 border-b p-3.5 pb-2.5">
-          <div style={{ background: source.color }} className="h-3 w-3 rounded-full" />
-          <div>
-            Pure {source.id}: <b>{source.value}</b>
-          </div>
+    <div
+      className={`mx-3.5 mt-4 rounded-md border text-sm lg:mx-0 lg:mt-0 2xl:w-56
+        ${isDarkMode
+          ? 'bg-slate-800 border-slate-700 text-slate-100'
+          : 'bg-white border-slate-200 text-slate-800'
+        }`}
+    >
+      <div
+        className={`mb-1 flex items-center gap-2 border-b p-3.5 pb-2.5
+          ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}
+      >
+        <div
+          style={{ background: source.color }}
+          className="h-3 w-3 rounded-full"
+        />
+        {source.id !== target.id && (
+          <div
+            style={{ background: target.color }}
+            className="ml-0.5 mr-2 h-3 w-3 rounded-full"
+          />
+        )}
+        <div>
+          {source.id === target.id ? (
+            <>
+              <span className="font-medium">Pure {source.id}</span>: <b>{source.value}</b>
+            </>
+          ) : (
+            <>
+              <span className="font-medium">{source.id}-{target.id}</span>: <b>{source.value}</b>
+            </>
+          )}
         </div>
-      ) : (
-        <div className="mb-1 flex items-center border-b p-3.5 pb-2.5">
-          <div style={{ background: source.color }} className="h-3 w-3 rounded-full" />
-          <div style={{ background: target.color }} className="ml-0.5 mr-2 h-3 w-3 rounded-full" />
-          <div>
-            {source.id}-{target.id}: <b>{source.value}</b>
-          </div>
-        </div>
-      )}
+      </div>
 
       <div className="max-h-96 overflow-auto 2xl:h-[36rem] 2xl:max-h-[36rem]">
         {pokemons?.[id]?.map((pokemonName) => {
@@ -53,7 +68,11 @@ export default function Detail({ activeRibbon }) {
             <Link
               key={pokemonName}
               to={`/pokemon/${href}`}
-              className="block py-1 px-3.5 hover:bg-slate-50 dark:hover:bg-slate-700"
+              className={`block px-3.5 py-1 transition-colors ${
+                isDarkMode
+                  ? 'hover:bg-slate-700 text-slate-100'
+                  : 'hover:bg-slate-100 text-slate-800'
+              }`}
             >
               {snakeCaseToTitleCase(pokemonName)}
             </Link>

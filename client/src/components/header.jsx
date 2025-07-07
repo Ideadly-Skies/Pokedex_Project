@@ -1,26 +1,13 @@
 // src/components/Header.jsx
-import { useState, useEffect } from 'react';
 import { BsGithub } from 'react-icons/bs';
 import { FaProductHunt } from 'react-icons/fa';
 import { HiMoon, HiSun } from 'react-icons/hi';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 export default function Header() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (localStorage.theme === 'dark') {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  const toggleDarkMode = (checked) => {
-    setDarkMode(checked);
-    localStorage.theme = checked ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark', checked);
-  };
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <header id="_header">
@@ -70,8 +57,8 @@ export default function Header() {
               type="checkbox"
               id="darkmode-toggle"
               className="sr-only"
-              checked={darkMode}
-              onChange={(e) => toggleDarkMode(e.target.checked)}
+              checked={isDarkMode}
+              onChange={(e) => toggleTheme(e.target.checked)}
             />
             <div className="h-7 w-11 rounded-full bg-gray-300 dark:bg-slate-500 transition-colors" />
             <div className="absolute left-0 top-0 m-0.5 h-6 w-6 rounded-full bg-white transition-all dark:left-4" />
@@ -83,7 +70,7 @@ export default function Header() {
 
       {/* Helmet: meta theme color */}
       <Helmet>
-        <meta name="theme-color" content={darkMode ? '#25303f' : '#ffffff'} />
+        <meta name="theme-color" content={isDarkMode ? '#25303f' : '#ffffff'} />
       </Helmet>
     </header>
   );
