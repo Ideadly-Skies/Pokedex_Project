@@ -39,7 +39,6 @@ export default function PokemonImage({
     };
 
     fetchImage();
-
     return () => {
       isMounted = false;
     };
@@ -48,10 +47,15 @@ export default function PokemonImage({
   if (loading) {
     return (
       <div
-        className={className}
-        style={{ width: size, height: size, display: 'inline-block', background: '#eee' }}
+        className={`${className} flex items-center justify-center`}
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: '#f3f4f6',
+          borderRadius: '12px',
+        }}
       >
-        Loading...
+        <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -59,8 +63,8 @@ export default function PokemonImage({
   if (!imageUrl) {
     return (
       <div
-        className={className}
-        style={{ width: size, height: size, display: 'inline-block', background: '#eee' }}
+        className={`${className} flex items-center justify-center text-gray-500 text-sm`}
+        style={{ width: size, height: size, backgroundColor: '#f3f4f6', borderRadius: '12px' }}
       >
         Image not found
       </div>
