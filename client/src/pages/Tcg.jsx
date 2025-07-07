@@ -6,15 +6,26 @@ function Tcg() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [rares, setRares] = useState([]);
+  const [hide, setHide] = useState(true);
   // Axios
   const tcgApi = axios.create({
-    baseURL: "https://api.pokemontcg.io/v2/cards",
+    baseURL: "https://api.pokemontcg.io/v2",
   });
+
+  async function fetchRares() {
+    try {
+      const { data } = await tcgApi({ url: "/rarities" });
+      setRares(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function fetchData() {
     setLoading(true);
     try {
-      const { data } = await tcgApi();
+      const { data } = await tcgApi({ url: "/cards" });
       setCards(data.data);
     } catch (error) {
       setError(error);
@@ -26,9 +37,13 @@ function Tcg() {
 
   useEffect(() => {
     fetchData();
+    fetchRares();
   }, []);
 
-  console.log(cards);
+  const toggle = () => (hide ? setHide(false) : setHide(true));
+  const rarityClass = `mt-3 absolute bg-gray-50 border w-full rounded-md px-1 py-1 -ml-3 overflow-auto max-h-[calc(100vh_-_16rem)] ${
+    hide ? "invisible" : "visible"
+  }`;
 
   return (
     <main>
@@ -44,12 +59,20 @@ function Tcg() {
           <button
             type="button"
             className="flex justify-between w-full items-center"
+            onClick={toggle}
           >
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-F-light">
               Select rarity
             </div>
             <BiSolidDownArrow />
           </button>
+          <ul className={rarityClass}>
+            {rares.map((rare) => (
+              <li className="my-1 px-2 py-1 rounded-md hover:bg-gray-200">
+                {rare}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <hr className="mt-2" />
