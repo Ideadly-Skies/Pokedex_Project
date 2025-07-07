@@ -1,7 +1,35 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { BiSolidDownArrow } from "react-icons/bi";
+import axios from "axios";
 
 function Tcg() {
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  // Axios
+  const tcgApi = axios.create({
+    baseURL: "https://api.pokemontcg.io/v2/cards",
+  });
+
+  async function fetchData() {
+    setLoading(true);
+    try {
+      const { data } = await tcgApi();
+      setCards(data.data);
+    } catch (error) {
+      setError(error);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(cards);
+
   return (
     <main>
       <h1 className="pb-3 text-2xl font-semibold">Pokémon Trading Card Game</h1>
@@ -17,7 +45,7 @@ function Tcg() {
             type="button"
             className="flex justify-between w-full items-center"
           >
-            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-F-light">
               Select rarity
             </div>
             <BiSolidDownArrow />
@@ -26,36 +54,26 @@ function Tcg() {
       </div>
       <hr className="mt-2" />
       <section className="flex flex-wrap gap-x-3.5 pt-6 text-xs *:relative *:mb-4 *:flex-[1_1_10rem] sm:gap-x-5 sm:*:mb-5 md:gap-x-6 md:*:mb-6">
-        <div>
-          <img
-            src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
-            className="absolute -z-10 w-full rounded-lg opacity-50"
-            width="1rem"
-          />
-          <button>
-            <img
-              src="https://images.pokemontcg.io/dp3/1.png"
-              alt=""
-              className="w-full cursor-pointer"
-            />
-          </button>
-          <div className="pt-0.5">Artist : Kouki Saitou</div>
-        </div>
-        <div>
-          <img
-            src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
-            className="absolute -z-10 w-full rounded-lg opacity-50"
-            width="1rem"
-          />
-          <button>
-            <img
-              src="https://images.pokemontcg.io/dp3/1.png"
-              alt=""
-              className="w-full cursor-pointer"
-            />
-          </button>
-          <div className="pt-0.5">Artist : Kouki Saitou</div>
-        </div>
+        {error && <p>Error!</p>}
+        {loading && <p>Loading...</p>}
+        {!loading &&
+          cards.map((card) => (
+            <div key={card.id}>
+              <img
+                src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
+                className="absolute -z-10 w-full rounded-lg opacity-50"
+                width="1rem"
+              />
+              <button type="button" className="w-full">
+                <img
+                  src={card.images.small}
+                  alt=""
+                  className="w-full cursor-pointer"
+                />
+              </button>
+              <div className="pt-1">Artist : {card.artist}</div>
+            </div>
+          ))}
       </section>
     </main>
   );
