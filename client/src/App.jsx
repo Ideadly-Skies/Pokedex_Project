@@ -16,6 +16,7 @@ import Gmax from './pages/Gmax';
 import Mega from './pages/Mega';
 import GuessPokemon from './pages/GuessPokemon';
 import Tcg from './pages/Tcg';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -124,6 +125,9 @@ function App() {
           </Layout>
         }
       />
+
+      {/* not found page */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
