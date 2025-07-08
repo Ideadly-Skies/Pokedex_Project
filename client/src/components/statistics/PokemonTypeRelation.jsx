@@ -6,6 +6,8 @@ import ArcTooltipMemoized from './arc';
 import Detail from './detail';
 import RibbonTooltipMemoized from './ribbon';
 
+import { useTheme } from '../../hooks/useTheme';
+
 const fetchStatistics = async () => {
   const res = await fetch('/generated/statistics/types.json');
   if (!res.ok) throw new Error('Failed to fetch type statistics');
@@ -13,6 +15,7 @@ const fetchStatistics = async () => {
 };
 
 export default function PokemonTypeRelation() {
+  const { isDarkMode } = useTheme();
   const [activeRibbon, setActiveRibbon] = useState(null);
 
   const { data: statistics, isLoading, error } = useQuery({
@@ -20,7 +23,15 @@ export default function PokemonTypeRelation() {
     queryFn: fetchStatistics,
   });
 
-  if (isLoading) return <p className="p-4">Loading chord chart...</p>;
+  if (isLoading) {
+    return (
+      <div className="py-8 text-center">
+        <div className="animate-spin h-10 w-10 mx-auto rounded-full border-t-4 border-red-600 border-opacity-50 mb-4" />
+        <p className={`${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Loading Type Relation Chart...</p>
+      </div>
+    );
+  } 
+    
   if (error) return <p className="p-4 text-red-500">Error loading data</p>;
   if (!statistics) return null;
 
