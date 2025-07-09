@@ -1,69 +1,101 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-const dummyPokemons = [
-  { id: 1, name: 'Bulbasaur', type: 'Grass' },
-  { id: 2, name: 'Charmander', type: 'Fire' },
-  { id: 3, name: 'Squirtle', type: 'Water' },
-  { id: 4, name: 'Pikachu', type: 'Electric' },
-  { id: 5, name: 'Eevee', type: 'Normal' },
-];
+import { useEffect, useRef, useState } from "react";
+import CardPokemons from "../components/CardPokemons/CardPokemons";
+import CardPokemonsSkeleton from "../components/CardPokemons/CardPokemonsSkeleton";
+import toast, { Toaster } from "react-hot-toast";
+import ConfirmationDialog from "../components/Modal/ConfirmationDialog";
+import useGetPokemon from "../hooks/useGetPokemon";
 
 export default function Home() {
-  const [filter, setFilter] = useState('');
-  const [filteredPokemons, setFilteredPokemons] = useState(dummyPokemons);
-  const loadMoreRef = useRef(null);
+  // const [pokemonList, setPokemonList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    const visible = filter
-      ? dummyPokemons.filter((p) => p.name.toLowerCase().includes(filter.toLowerCase()))
-      : dummyPokemons;
-    setFilteredPokemons(visible);
-  }, [filter]);
+  const [nextUrl, setNextUrl] = useState();
+  const [prevUrl, setPrevUrl] = useState();
+  const confirmDialogRef = useRef(null);
+  const [bookmarks, setBookmark] = useState(
+    localStorage.getItem("bookmark")
+      ? JSON.parse(localStorage.getItem("bookmark"))
+      : []
+  );
+  const [toDelete, setToDelete] = useState({});
+  const { GetPokemon, pokemonDetails } = useGetPokemon(
+    setLoading,
+    setNextUrl,
+    setPrevUrl
+  );
+
+  function deleteItem() {
+    const updatedBookmarks = bookmarks.filter((b) => b.id !== toDelete.id);
+    setBookmark(updatedBookmarks);
+    localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
+    console.log("Bookmark removed");
+    toast.success("Bookmark Removed");
+  }
+  const handleToggleBookmark = (pokemon) => {
+    const isAlreadyBookmarked = bookmarks.some((b) => b.id === pokemon.id);
+
+    if (isAlreadyBookmarked) {
+      setToDelete(pokemon);
+      confirmDialogRef.current.showModal();
+    } else {
+      const updatedBookmarks = [...bookmarks, pokemon];
+      setBookmark(updatedBookmarks);
+      localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
+      console.log("Bookmark added");
+      toast.success("Bookmark added");
+    }
+  };
 
   return (
     <>
-      <title>Pokémon Awesome</title>
-      <div style={{ padding: '1rem' }}>
-        <input
-          type="text"
-          placeholder="Search Pokémon..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            fontSize: '1rem',
-            marginBottom: '1rem',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-          }}
-        />
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-            gap: '1rem',
-          }}
-        >
-          {filteredPokemons.map((pokemon) => (
-            <div
-              key={pokemon.id}
-              style={{
-                padding: '1rem',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                textAlign: 'center',
-                backgroundColor: '#f9f9f9',
-              }}
-            >
-              <h3>{pokemon.name}</h3>
-              <p>{pokemon.type}</p>
-            </div>
-          ))}
-          {filteredPokemons.length === 0 && <p>No Pokémon found</p>}
+      <div>
+        <Toaster position="top-center" reverseOrder={false} />
+        <ConfirmationDialog ref={confirmDialogRef} action={deleteItem}>
+          <p>
+            Are you sure you want to remove{" "}
+            <span className="font-bold capitalize"> {toDelete.name}</span> from
+            your bookmarks?
+          </p>
+        </ConfirmationDialog>
+      </div>
+      <div className=" flex flex-col gap-2 ">
+        <h1 className="text-4xl">Pokémon Species</h1>
+        <div className="divider"></div>
+        <div className="grid gap-3 grid-cols-3">
+          {loading
+            ? [...Array(18)].map((_, i) => <CardPokemonsSkeleton key={i} />)
+            : pokemonDetails.map((item, i) => (
+                <CardPokemons
+                  item={item}
+                  key={i}
+                  handleBookMark={handleToggleBookmark}
+                  bookmarks={bookmarks}
+                />
+              ))}
+        </div>
+        <div className="join mx-auto mt-4">
+          <button
+            disabled={!prevUrl}
+            className="join-item btn"
+            onClick={() => {
+              GetPokemon(prevUrl), setPage((prev) => prev - 1);
+            }}
+          >
+            «
+          </button>
+          <button className="join-item btn">{page}</button>
+          <button
+            disabled={!nextUrl}
+            className="join-item btn"
+            onClick={() => {
+              GetPokemon(nextUrl), setPage((prev) => prev + 1);
+            }}
+          >
+            »
+          </button>
         </div>
       </div>
-      <div ref={loadMoreRef}></div>
     </>
   );
 }
