@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import axios from "axios";
-import TCGdex from "@tcgdex/sdk";
 
 function Tcg() {
   const [cards, setCards] = useState([]);
@@ -9,7 +8,8 @@ function Tcg() {
   const [error, setError] = useState(null);
   const [rares, setRares] = useState([]);
   const [hide, setHide] = useState(true);
-  const [rarePlaceHolder, setRarePlaceHolder] = useState("Select rarity");
+  const [content, setContent] = useState("");
+  const [rarity, setRarity] = useState("");
   // Axios
   const tcgApi = axios.create({
     baseURL: "https://api.pokemontcg.io/v2",
@@ -44,16 +44,41 @@ function Tcg() {
 
   async function rareQuery(rare) {
     setLoading(true);
-    console.log(rare);
+    setRarity(rare);
+    setContent("");
+    setError(null);
     try {
       const { data } = await tcgApi({
         url: "/cards",
         params: {
-          q: "rarity:" + rare,
+          q: `rarity:"${rare}"`,
         },
       });
       setCards(data.data);
-      setRarePlaceHolder(rare);
+    } catch (error) {
+      setError(error);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function contentQuery(keyword) {
+    setLoading(true);
+    setRarity("");
+    setError(null);
+    if (keyword == "") {
+      fetchData();
+      return;
+    }
+    try {
+      const { data } = await tcgApi({
+        url: "/cards",
+        params: {
+          q: `name:"${keyword}"`,
+        },
+      });
+      setCards(data.data);
     } catch (error) {
       setError(error);
       console.log(error);
@@ -71,12 +96,23 @@ function Tcg() {
     <main>
       <h1 className="pb-3 text-2xl font-semibold">Pokémon Trading Card Game</h1>
       <div className="sticky top-16 z-30 translate-y-[calc((2.7_*_var(--header-translateY))_-_1px)] transition-transform -mx-3.5 flex flex-wrap gap-x-2 gap-y-2.5 bg-B-base px-3.5 pt-2.5 md:translate-y-0 lg:top-0.5 lg:z-50 lg:mr-44 lg:bg-transparent sm:flex lg:max-w-lg">
-        <input
-          type="search"
-          className="w-full rounded-md border bg-B-dark px-3 py-2 placeholder:text-F-light sm:flex-1 md:max-w-72"
-          placeholder="🔍 Search card"
-          maxLength="15"
-        />
+        <form
+          className="w-full rounded-md border sm:flex-1 md:max-w-72"
+          onSubmit={(e) => {
+            e.preventDefault(), contentQuery(content);
+          }}
+        >
+          <input
+            type="search"
+            className="w-full rounded-md border bg-B-dark px-3 py-2 placeholder:text-F-light sm:flex-1 md:max-w-72"
+            placeholder="🔍 Search card"
+            maxLength="15"
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+        </form>
         <div className="relative w-full sm:flex-1 md:max-w-52 [&_div]:text-F-light rounded-md border bg-B-dark px-3 py-2">
           <button
             type="button"
@@ -84,7 +120,7 @@ function Tcg() {
             onClick={toggle}
           >
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-zinc-500">
-              {rarePlaceHolder}
+              {rarity == "" ? "Select Rarity" : rarity}
             </div>
             {hide ? <BiSolidDownArrow /> : <BiSolidUpArrow />}
           </button>
@@ -111,14 +147,13 @@ function Tcg() {
             <div key={card.id}>
               <img
                 src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
-                className="absolute -z-10 w-full rounded-lg opacity-50"
-                width="1rem"
+                className="absolute w-full lg:max-w-[200px] -z-10 rounded-lg opacity-50"
               />
-              <button type="button" className="w-full">
+              <button type="button" className="w-full lg:max-w-[200px]">
                 <img
                   src={card.images.small}
                   alt=""
-                  className="w-full cursor-pointer"
+                  className="w-full lg:max-w-[200px] cursor-pointer"
                 />
               </button>
               <div className="pt-1">Artist : {card.artist}</div>
