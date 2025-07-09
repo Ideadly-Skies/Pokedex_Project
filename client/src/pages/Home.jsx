@@ -3,12 +3,13 @@ import CardPokemons from "../components/CardPokemons/CardPokemons";
 import CardPokemonsSkeleton from "../components/CardPokemons/CardPokemonsSkeleton";
 import toast, { Toaster } from "react-hot-toast";
 import ConfirmationDialog from "../components/Modal/ConfirmationDialog";
+import useGetPokemon from "../hooks/useGetPokemon";
 
 export default function Home() {
   // const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [pokemonDetails, setPokemonDetails] = useState([]);
+
   const [nextUrl, setNextUrl] = useState();
   const [prevUrl, setPrevUrl] = useState();
   const confirmDialogRef = useRef(null);
@@ -18,7 +19,11 @@ export default function Home() {
       : []
   );
   const [toDelete, setToDelete] = useState({});
-  const pokeUrl = "https://pokeapi.co/api/v2/pokemon?limit=18&offset=0";
+  const { GetPokemon, pokemonDetails } = useGetPokemon(
+    setLoading,
+    setNextUrl,
+    setPrevUrl
+  );
 
   function deleteItem() {
     const updatedBookmarks = bookmarks.filter((b) => b.id !== toDelete.id);
@@ -41,42 +46,6 @@ export default function Home() {
       toast.success("Bookmark added");
     }
   };
-
-  async function GetPokemon(urlAPI) {
-    try {
-      setLoading(true);
-      const response = await fetch(urlAPI);
-      const data = await response.json();
-      setNextUrl(data.next);
-      setPrevUrl(data.previous);
-      const results = data.results;
-      const detailsPokemon = results.map((item) =>
-        fetch(item.url).then((res) =>
-          res
-            .json()
-            .catch((err) => {
-              console.log(err);
-            })
-            .finally(() => {
-              setTimeout(() => {
-                setLoading(false);
-              }, 200);
-            })
-        )
-      );
-      const getAllDetails = await Promise.all(detailsPokemon);
-      setPokemonDetails(getAllDetails);
-      // setPokemonList(results);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      // setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    GetPokemon(pokeUrl);
-  }, []);
 
   return (
     <>
