@@ -44,7 +44,7 @@ const CardPokemons = ({ item, handleBookMark, bookmarks }) => {
         <div
           className={`${colors[0]} relative w-full shadow-sm flex overflow-hidden rounded-md p-4 justify-between items-center border-1   border-base-content`}
         >
-          <div className="inset-0 absolute bg-black/40 "></div>
+          <div className="inset-0 absolute bg-linear-to-r from-black/50 to-black/20 bg-black/40 "></div>
           <div className="text-base-content flex flex-col gap-2 z-1">
             <div className="flex gap-2 items-center">
               <h2 className="text-xl capitalize">{item.name}</h2>

@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ConfirmationDialog from "../components/Modal/ConfirmationDialog";
 
 export default function Home() {
-  const [pokemonList, setPokemonList] = useState([]);
+  // const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [pokemonDetails, setPokemonDetails] = useState([]);
@@ -66,7 +66,7 @@ export default function Home() {
       );
       const getAllDetails = await Promise.all(detailsPokemon);
       setPokemonDetails(getAllDetails);
-      setPokemonList(results);
+      // setPokemonList(results);
     } catch (error) {
       console.log(error);
     } finally {
