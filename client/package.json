@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@tcgdex/sdk": "^2.7.0",
     "axios": "^1.10.0",
     "classnames": "^2.5.1",
     "lucide-react": "^0.525.0",

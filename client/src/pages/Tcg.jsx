@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { BiSolidDownArrow } from "react-icons/bi";
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import axios from "axios";
+import TCGdex from "@tcgdex/sdk";
 
 function Tcg() {
   const [cards, setCards] = useState([]);
@@ -8,6 +9,7 @@ function Tcg() {
   const [error, setError] = useState(null);
   const [rares, setRares] = useState([]);
   const [hide, setHide] = useState(true);
+  const [rarePlaceHolder, setRarePlaceHolder] = useState("Select rarity");
   // Axios
   const tcgApi = axios.create({
     baseURL: "https://api.pokemontcg.io/v2",
@@ -40,6 +42,26 @@ function Tcg() {
     fetchRares();
   }, []);
 
+  async function rareQuery(rare) {
+    setLoading(true);
+    console.log(rare);
+    try {
+      const { data } = await tcgApi({
+        url: "/cards",
+        params: {
+          q: "rarity:" + rare,
+        },
+      });
+      setCards(data.data);
+      setRarePlaceHolder(rare);
+    } catch (error) {
+      setError(error);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const toggle = () => (hide ? setHide(false) : setHide(true));
   const rarityClass = `mt-3 absolute bg-gray-50 border w-full rounded-md px-1 py-1 -ml-3 overflow-auto max-h-[calc(100vh_-_16rem)] ${
     hide ? "invisible" : "visible"
@@ -61,14 +83,19 @@ function Tcg() {
             className="flex justify-between w-full items-center"
             onClick={toggle}
           >
-            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-F-light">
-              Select rarity
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-zinc-500">
+              {rarePlaceHolder}
             </div>
-            <BiSolidDownArrow />
+            {hide ? <BiSolidDownArrow /> : <BiSolidUpArrow />}
           </button>
           <ul className={rarityClass}>
             {rares.map((rare) => (
-              <li className="my-1 px-2 py-1 rounded-md hover:bg-gray-200">
+              <li
+                className="my-1 px-2 py-1 rounded-md hover:bg-gray-200"
+                onClick={(e) => {
+                  rareQuery(e.target.innerText), toggle();
+                }}
+              >
                 {rare}
               </li>
             ))}
