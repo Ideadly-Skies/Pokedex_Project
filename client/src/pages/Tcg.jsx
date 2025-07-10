@@ -10,7 +10,7 @@ function Tcg() {
   const [hide, setHide] = useState(true);
   const [content, setContent] = useState("");
   const [rarity, setRarity] = useState("");
-  const [modalCard, setModalCard] = useState([]);
+  const [modalCard, setModalCard] = useState([null]);
   // Axios
   const tcgApi = axios.create({
     baseURL: "https://api.pokemontcg.io/v2",
@@ -98,27 +98,28 @@ function Tcg() {
       {/* modal box */}
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       <dialog id="my_modal_2" className="modal">
-        <div className="modal-box w-full lg:max-w-[300px]">
-          <h3 className="font-bold text-lg">{modalCard.name}</h3>
-          <hr className="my-4" />
-          <img
-            src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
-            className="absolute w-full lg:max-w-[200px] -z-10 rounded-lg opacity-50"
-          />
-          <img
-            src={modalCard.images.small}
-            alt=""
-            className="w-full lg:max-w-[200px] cursor-pointer"
-          />
-          <p className="py-3">Artist: {modalCard.artist}</p>
-          <p>Rarity: {modalCard.rarity}</p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn w-full">Close</button>
-            </form>
+        {modalCard && modalCard.images && (
+          <div className="modal-box w-full lg:max-w-[300px]">
+            <h3 className="font-bold text-lg">{modalCard.name}</h3>
+            <hr className="my-4" />
+            <img
+              src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
+              className="absolute w-full lg:max-w-[200px] -z-10 rounded-lg opacity-50"
+            />
+            <img
+              src={modalCard?.images?.small}
+              alt=""
+              className="w-full lg:max-w-[200px] cursor-pointer"
+            />
+            <p className="py-3">Artist: {modalCard.artist}</p>
+            <p>Rarity: {modalCard.rarity}</p>
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn w-full">Close</button>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
@@ -157,6 +158,7 @@ function Tcg() {
           <ul className={rarityClass}>
             {rares.map((rare) => (
               <li
+                key={rare}
                 className="my-1 px-2 py-1 rounded-md hover:bg-gray-200"
                 onClick={(e) => {
                   rareQuery(e.target.innerText), toggle();
@@ -174,29 +176,27 @@ function Tcg() {
         {loading && <p>Loading...</p>}
         {!loading &&
           cards.map((card) => (
-            <>
-              <div key={card.id}>
+            <div key={card.id}>
+              <img
+                src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
+                className="absolute w-full lg:max-w-[200px] -z-10 rounded-lg opacity-50"
+              />
+              <button
+                type="button"
+                className="w-full lg:max-w-[200px]"
+                onClick={() => {
+                  document.getElementById("my_modal_2").showModal(),
+                    setModalCard(card);
+                }}
+              >
                 <img
-                  src="https://pokemon-assets.pages.dev/assets/images/tcg-card-back.webp"
-                  className="absolute w-full lg:max-w-[200px] -z-10 rounded-lg opacity-50"
+                  src={card.images.small}
+                  alt=""
+                  className="w-full lg:max-w-[200px] cursor-pointer"
                 />
-                <button
-                  type="button"
-                  className="w-full lg:max-w-[200px]"
-                  onClick={() => {
-                    document.getElementById("my_modal_2").showModal(),
-                      setModalCard(card);
-                  }}
-                >
-                  <img
-                    src={card.images.small}
-                    alt=""
-                    className="w-full lg:max-w-[200px] cursor-pointer"
-                  />
-                </button>
-                <div className="pt-1">Artist : {card.artist}</div>
-              </div>
-            </>
+              </button>
+              <div className="pt-1">Artist : {card.artist}</div>
+            </div>
           ))}
       </section>
     </main>
