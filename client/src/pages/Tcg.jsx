@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import axios from "axios";
+import Swal from 'sweetalert2'
 
 function Tcg() {
   const [cards, setCards] = useState([]);
@@ -21,7 +22,11 @@ function Tcg() {
       const { data } = await tcgApi({ url: "/rarities" });
       setRares(data.data);
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      });
     }
   }
 
@@ -32,7 +37,11 @@ function Tcg() {
       setCards(data.data);
     } catch (error) {
       setError(error);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -58,7 +67,11 @@ function Tcg() {
       setCards(data.data);
     } catch (error) {
       setError(error);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -82,7 +95,11 @@ function Tcg() {
       setCards(data.data);
     } catch (error) {
       setError(error);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }

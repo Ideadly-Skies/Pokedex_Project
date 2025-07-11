@@ -4,6 +4,7 @@ import { RiLineHeight } from "react-icons/ri";
 import { TbWeight } from "react-icons/tb";
 import usePokemonTypeClasses from "../hooks/usePokemonTypeClasses";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 function Compare() {
   const pokeUrl = "https://pokeapi.co/api/v2/pokemon?limit=18&offset=0";
@@ -24,8 +25,12 @@ function Compare() {
           res
             .json()
             .catch((err) => {
-              console.log(err);
-            })
+              Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: err.message,
+                });
+              })
             .finally(() => {
               setTimeout(() => {
                 setLoading(false);
@@ -37,7 +42,11 @@ function Compare() {
       setPokemonDetails(getAllDetails);
     
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      }); 
     } 
   }
 
@@ -56,7 +65,6 @@ function Compare() {
     GetPokemon(pokeUrl);
   }, []);
 
-  console.log(compare);
   return (
     <>
       <div className=" flex flex-col gap-2">
