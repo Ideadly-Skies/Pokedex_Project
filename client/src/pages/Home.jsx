@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CardPokemons from "../components/CardPokemons/CardPokemons";
 import CardPokemonsSkeleton from "../components/CardPokemons/CardPokemonsSkeleton";
 import toast, { Toaster } from "react-hot-toast";
@@ -29,7 +29,6 @@ export default function Home() {
     const updatedBookmarks = bookmarks.filter((b) => b.id !== toDelete.id);
     setBookmark(updatedBookmarks);
     localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
-    console.log("Bookmark removed");
     toast.success("Bookmark Removed");
   }
   const handleToggleBookmark = (pokemon) => {
@@ -42,7 +41,6 @@ export default function Home() {
       const updatedBookmarks = [...bookmarks, pokemon];
       setBookmark(updatedBookmarks);
       localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
-      console.log("Bookmark added");
       toast.success("Bookmark added");
     }
   };

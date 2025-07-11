@@ -35,21 +35,10 @@ function Compare() {
       );
       const getAllDetails = await Promise.all(detailsPokemon);
       setPokemonDetails(getAllDetails);
-
-      const allStats = getAllDetails.map((poke) => ({
-        name: poke.name,
-        stats: poke.stats.map((s) => ({
-          name: s.stat.name,
-          base_stat: s.base_stat,
-        })),
-      }));
-
-      setStats(allStats);
+    
     } catch (error) {
       console.log(error);
-    } finally {
-
-    }
+    } 
   }
 
   const handleCompare = (value) => {
