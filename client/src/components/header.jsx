@@ -12,7 +12,6 @@ export default function Header() {
   return (
     <header id="_header">
       <div id="_header-inner">
-        {/* Logo + Label */}
         <Link to="/" className="-ml-px inline-flex flex-col items-end">
           <img
             src="/images/pokemon-logo.png"
