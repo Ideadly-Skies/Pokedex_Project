@@ -1,1 +1,200 @@
-{"largestSingleType":[{"n":86,"type":["normal"]},{"n":84,"type":["water"]},{"n":52,"type":["electric"]}],"largestMultiType":[{"n":31,"type":["flying","normal"]},{"n":18,"type":["flying","rock"]},{"n":16,"type":["grass","poison"]}],"smallestSingleType":[{"n":4,"type":["flying"]},{"n":13,"type":["dragon"]},{"n":14,"type":["steel"]}],"smallestMultiType":[{"n":1,"type":["steel","water"]},{"n":1,"type":["normal","water"]},{"n":1,"type":["ghost","ice"]}],"noOccurenceMultiType":[["bug","dragon"],["bug","normal"],["fairy","fire"],["fairy","ground"],["ghost","rock"],["ice","normal"],["ice","poison"],["normal","rock"],["normal","steel"]]}
+{
+  "typeCount": {
+    "bug": {
+      "total": 98,
+      "single": 23
+    },
+    "dark": {
+      "total": 91,
+      "single": 16
+    },
+    "dragon": {
+      "total": 93,
+      "single": 13
+    },
+    "electric": {
+      "total": 86,
+      "single": 36
+    },
+    "fairy": {
+      "total": 77,
+      "single": 22
+    },
+    "fighting": {
+      "total": 92,
+      "single": 30
+    },
+    "fire": {
+      "total": 97,
+      "single": 37
+    },
+    "flying": {
+      "total": 129,
+      "single": 4
+    },
+    "ghost": {
+      "total": 82,
+      "single": 19
+    },
+    "grass": {
+      "total": 141,
+      "single": 47
+    },
+    "ground": {
+      "total": 90,
+      "single": 17
+    },
+    "ice": {
+      "total": 65,
+      "single": 22
+    },
+    "normal": {
+      "total": 149,
+      "single": 81
+    },
+    "poison": {
+      "total": 96,
+      "single": 16
+    },
+    "psychic": {
+      "total": 134,
+      "single": 47
+    },
+    "rock": {
+      "total": 88,
+      "single": 20
+    },
+    "steel": {
+      "total": 86,
+      "single": 12
+    },
+    "water": {
+      "total": 175,
+      "single": 79
+    }
+  },
+  "largestSingleType": [
+    {
+      "n": 86,
+      "type": [
+        "normal"
+      ]
+    },
+    {
+      "n": 84,
+      "type": [
+        "water"
+      ]
+    },
+    {
+      "n": 52,
+      "type": [
+        "electric"
+      ]
+    }
+  ],
+  "largestMultiType": [
+    {
+      "n": 31,
+      "type": [
+        "flying",
+        "normal"
+      ]
+    },
+    {
+      "n": 18,
+      "type": [
+        "flying",
+        "rock"
+      ]
+    },
+    {
+      "n": 16,
+      "type": [
+        "grass",
+        "poison"
+      ]
+    }
+  ],
+  "smallestSingleType": [
+    {
+      "n": 4,
+      "type": [
+        "flying"
+      ]
+    },
+    {
+      "n": 13,
+      "type": [
+        "dragon"
+      ]
+    },
+    {
+      "n": 14,
+      "type": [
+        "steel"
+      ]
+    }
+  ],
+  "smallestMultiType": [
+    {
+      "n": 1,
+      "type": [
+        "steel",
+        "water"
+      ]
+    },
+    {
+      "n": 1,
+      "type": [
+        "normal",
+        "water"
+      ]
+    },
+    {
+      "n": 1,
+      "type": [
+        "ghost",
+        "ice"
+      ]
+    }
+  ],
+  "noOccurenceMultiType": [
+    [
+      "bug",
+      "dragon"
+    ],
+    [
+      "bug",
+      "normal"
+    ],
+    [
+      "fairy",
+      "fire"
+    ],
+    [
+      "fairy",
+      "ground"
+    ],
+    [
+      "ghost",
+      "rock"
+    ],
+    [
+      "ice",
+      "normal"
+    ],
+    [
+      "ice",
+      "poison"
+    ],
+    [
+      "normal",
+      "rock"
+    ],
+    [
+      "normal",
+      "steel"
+    ]
+  ]
+}

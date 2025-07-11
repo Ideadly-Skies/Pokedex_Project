@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Swal from 'sweetalert2'
 
 const useGetPokemon = (setLoading, setNextUrl, setPrevUrl) => {
   const pokeUrl = "https://pokeapi.co/api/v2/pokemon?limit=18&offset=0";
@@ -18,7 +19,11 @@ const useGetPokemon = (setLoading, setNextUrl, setPrevUrl) => {
           res
             .json()
             .catch((err) => {
-              console.log(err);
+                Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: err.message,
+                });
             })
             .finally(() => {
               setTimeout(() => {
@@ -31,7 +36,11 @@ const useGetPokemon = (setLoading, setNextUrl, setPrevUrl) => {
       setPokemonDetails(getAllDetails);
       // setPokemonList(results);
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }

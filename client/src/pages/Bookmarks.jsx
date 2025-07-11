@@ -17,7 +17,6 @@ function Bookmarks() {
     const updatedBookmarks = bookmarks.filter((b) => b.id !== toDelete.id);
     setBookmark(updatedBookmarks);
     localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
-    console.log("Bookmark removed");
     toast.success("Bookmark Removed");
   }
 
@@ -31,7 +30,6 @@ function Bookmarks() {
       const updatedBookmarks = [...bookmarks, pokemon];
       setBookmark(updatedBookmarks);
       localStorage.setItem("bookmark", JSON.stringify(updatedBookmarks));
-      console.log("Bookmark added");
       toast.success("Bookmark added");
     }
   };
